@@ -30,7 +30,7 @@ const MyAuction = () => {
       <div>
         <p>Error: {error.message}</p>
       </div>
-    );
+    ); 
 
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4 md:flex">
