@@ -22,6 +22,7 @@ const handleSignup = async (req, res) => {
         return res.status(200).json({ token });
     }
     catch (err) {
+        console.log(err)
         res.status(500).json({ error: "Internal server error" });
     }
 }

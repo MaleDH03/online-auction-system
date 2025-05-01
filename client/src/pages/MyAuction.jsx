@@ -34,7 +34,7 @@ const MyAuction = () => {
 
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4 md:flex">
-      <UserProfile name={userData?.name} bids={"6"} />
+      <UserProfile name={userData?.name} bids={"7"} />
       <div>
         {userProducts && userProducts.length > 0 ? (
           userProducts.map((auction) => (

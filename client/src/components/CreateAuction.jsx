@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 const VITE_API = `${import.meta.env.VITE_API}`;
 
 const CreateAuction = () => {
@@ -15,8 +17,12 @@ const CreateAuction = () => {
   });
 
   const [isValid, setIsValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // For error feedback
+  const [successMessage, setSuccessMessage] = useState(""); // For success feedback
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate(); // Initialize useNavigate
 
+  // Validate form
   useEffect(() => {
     const isValid =
       formData.itemName &&
@@ -31,6 +37,8 @@ const CreateAuction = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
 
     try {
       const formDataForUpload = new FormData();
@@ -43,10 +51,18 @@ const CreateAuction = () => {
       formDataForUpload.append("itemEndDate", formData.itemEndDate);
       formDataForUpload.append("seller", user.userId);
 
-      await axios.post(`${VITE_API}/api/auction/create`, formDataForUpload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${VITE_API}/api/auction/create`,
+        formDataForUpload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
+      // Set success message
+      setSuccessMessage("Auction created successfully! 👍 ");
+      
+      // Reset form
       setFormData({
         itemName: "",
         itemPrice: "",
@@ -56,14 +72,30 @@ const CreateAuction = () => {
         itemStartDate: "",
         itemEndDate: "",
       });
+
+      // Redirect to /myauctions after a short delay to show success message
+      setTimeout(() => {
+        navigate(`/auction/user/${user.userId}`);
+      }, 3000); 
     } catch (error) {
-      console.error("Error creating auction:", error);
+      // Handle errors
+      const errorMsg =
+        error.response?.data?.error ||
+        error.message ||
+        "Failed to create auction. Please try again.";
+      setErrorMessage(errorMsg);
+      console.error("Error creating auction:", JSON.stringify(error.response?.data || error, null, 2));
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Optional: Validate file type client-side
+      if (!["image/png", "image/jpeg"].includes(file.type)) {
+        setErrorMessage("Only PNG and JPEG files are allowed!");
+        return;
+      }
       setFormData({ ...formData, itemPhoto: file });
     }
   };
@@ -74,6 +106,18 @@ const CreateAuction = () => {
   return (
     <div className="min-h-[calc(100svh-9rem)] px-4 py-4">
       <div className="mx-auto w-full max-w-[550px] bg-white">
+        {/* Display success or error messages */}
+        {successMessage && (
+          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="-mx-3 flex flex-wrap">
             {/* Item Name */}
@@ -124,7 +168,7 @@ const CreateAuction = () => {
           {/* Item Description */}
           <div className="mb-5">
             <label
-              htmlFor="desctiption"
+              htmlFor="description"
               className="mb-3 block text-base font-medium text-[#07074D]"
             >
               Item Description
@@ -135,11 +179,9 @@ const CreateAuction = () => {
                 setFormData({ ...formData, itemDescription: e.target.value })
               }
               rows="4"
-              type="text"
-              name="desctiption"
-              id="desctiption"
+              name="description"
+              id="description"
               placeholder="Enter your description here"
-              min="0"
               className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
             />
           </div>
@@ -172,7 +214,6 @@ const CreateAuction = () => {
             <label className="mb-3 block text-base font-medium text-[#07074D]">
               Upload item image
             </label>
-
             <div className="mb-5">
               <input
                 type="file"
@@ -180,6 +221,7 @@ const CreateAuction = () => {
                 id="itemPhoto"
                 className="sr-only"
                 onChange={handleFileChange}
+                accept="image/png,image/jpeg" // Ensure PNG and JPEG
               />
               {formData.itemPhoto && (
                 <div className="mb-4">
@@ -215,13 +257,6 @@ const CreateAuction = () => {
                       </span>
                     </span>
                   </span>
-                  <input
-                    type="file"
-                    name="fitemPhoto"
-                    className="hidden"
-                    accept="image/png,image/jpeg"
-                    id="itemPhoto"
-                  />
                 </div>
               </label>
             </div>
@@ -231,7 +266,7 @@ const CreateAuction = () => {
             <div className="w-full px-3 sm:w-1/2">
               <div className="mb-5">
                 <label
-                  htmlFor="date"
+                  htmlFor="startDate"
                   className="mb-3 block text-base font-medium text-[#07074D]"
                 >
                   Starting Date
@@ -242,8 +277,8 @@ const CreateAuction = () => {
                     setFormData({ ...formData, itemStartDate: e.target.value })
                   }
                   type="date"
-                  name="date"
-                  id="date"
+                  name="startDate"
+                  id="startDate"
                   min={today}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
@@ -252,7 +287,7 @@ const CreateAuction = () => {
             <div className="w-full px-3 sm:w-1/2">
               <div className="mb-5">
                 <label
-                  htmlFor="date"
+                  htmlFor="endDate"
                   className="mb-3 block text-base font-medium text-[#07074D]"
                 >
                   Ending Date
@@ -263,8 +298,8 @@ const CreateAuction = () => {
                     setFormData({ ...formData, itemEndDate: e.target.value })
                   }
                   type="date"
-                  name="date"
-                  id="date"
+                  name="endDate"
+                  id="endDate"
                   disabled={!formData.itemStartDate}
                   min={minEndDate}
                   className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
@@ -275,7 +310,9 @@ const CreateAuction = () => {
           {/* Submit button */}
           <div className="flex justify-end">
             <button
-              className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+              className={`hover:shadow-form rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none ${
+                isValid ? "bg-[#6A64F1]" : "bg-gray-400 cursor-not-allowed"
+              }`}
               type="submit"
               disabled={!isValid}
             >

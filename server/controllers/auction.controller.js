@@ -6,10 +6,8 @@ const createAuction = async (req, res) => {
     try {
         const { itemName, itemPrice, itemDescription, itemCategory, itemStartDate, itemEndDate, seller } = req.body;
         let imageUrl = '';
-
         if (req.file) {
             try {
-                console.log(req.file);
                 imageUrl = await uploadImage(req.file);
             } catch (error) {
                 return res.status(500).json({ message: 'Error uploading image to Cloudinary', error: error.message });
