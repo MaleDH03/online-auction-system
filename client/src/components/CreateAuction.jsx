@@ -145,7 +145,7 @@ const CreateAuction = () => {
             {/* Item Price */}
             <div className="w-full px-3 sm:w-1/2">
               <div className="mb-5">
-                <label
+                <label  
                   htmlFor="price"
                   className="mb-3 block text-base font-medium text-[#07074D]"
                 >
