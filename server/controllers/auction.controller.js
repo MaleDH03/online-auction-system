@@ -97,4 +97,15 @@ const updateAuctionById = async (req, res) => {
     }
 };
 
-export { createAuction, showAuction, auctionById, updateAuctionById };
+const showWaitingAuction = async (req, res) => {
+    try {
+        const currentDate = Date.now();
+        const auctions = await Product.find({ itemEndDate: { $gte: currentDate } , verificationStatus : "waiting" }).sort({ createdAt: -1 }).populate('seller', '_id name');
+        console.log(auctions)
+        return res.status(200).json({ message: 'All auctions', auctions });
+    } catch (error) {
+        return res.status(500).json({ message: 'Error fetching auctions', error: error.message });
+    }
+}
+
+export { createAuction, showAuction, auctionById, updateAuctionById , showWaitingAuction };

@@ -83,6 +83,11 @@ const authSlice = createSlice({
             state.user = null;
             state.userToken = null;
         },
+        updateUser: (state, action) => {
+            state.user = { ...state.user, ...action.payload }; // Merge updated user data
+            state.loading = false;
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -132,5 +137,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, updateUser } = authSlice.actions; // Added updateUser to exports
 export default authSlice.reducer;

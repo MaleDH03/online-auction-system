@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: false
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

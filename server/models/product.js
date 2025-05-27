@@ -41,6 +41,11 @@ const productSchema = new mongoose.Schema({
         bid: Number,
         time: Date
     }],
+    verificationStatus: {
+        type: String,
+        enum: ['accepted', 'refused', 'waiting'], 
+        default: 'waiting', 
+    },
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

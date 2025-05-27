@@ -14,6 +14,7 @@ import CreateAuction from "./components/CreateAuction.jsx";
 import MyAuction from "./pages/MyAuction.jsx";
 import Product from "./pages/Product.jsx";
 import Test from "./pages/Test.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <Error />,
     children: [
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
       {
         path: "auction",
         element: <Dashboard />,

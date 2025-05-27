@@ -3,9 +3,11 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import Product from "../models/product.js";
-import mongoose from "mongoose";
+import uploadImage from "../services/cloudinaryService.js";
 
 dotenv.config().parsed;
+
+
 
 const handleSignup = async (req, res) => {
     const { name, email, password } = req.body;
@@ -79,6 +81,7 @@ const handleUser = async (req, res) => {
     const { userId } = req.params;
     try {
         const user = await User.findOne({ _id: userId }, { password: 0 });
+        console.log(user)
         if (!user) {
             console.log("hii");
             return res.status(400).json({ error: "User doesn't exist." });
@@ -93,6 +96,55 @@ const handleUser = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 }
+const handleUserChange = async (req, res) => {
+    const { userId } = req.params; // Assuming userId comes from route params
+    const { name, email } = req.body;
+    let imageUrl;
 
+    // Handle image upload to Cloudinary if a file is provided
+    if (req.file) {
+        try {
+            imageUrl = await uploadImage(req.file);
+        } catch (error) {
+            return res.status(500).json({ message: "Error uploading image to Cloudinary", error: error.message });
+        }
+    }
 
-export { handleSignup, handleLogin, handleDelete, handleGetUser, handleUser };
+    try {
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(400).json({ error: "User doesn't exist." });
+        }
+
+        // Update user data
+        if (name) user.name = name;
+        if (email) {
+            // Check if the new email is already in use by another user
+            const emailExists = await User.findOne({ email, _id: { $ne: userId } });
+            if (emailExists) {
+                return res.status(409).json({ error: "Email already in use" });
+            }
+            user.email = email;
+        }
+        if (imageUrl) {
+            user.image = imageUrl; // Update the profilePicture field with the Cloudinary URL
+        }
+        console.log(user)
+        // Save the updated user
+        await user.save();
+
+        // Exclude password from response
+        const updatedUser = await User.findById(userId, { password: 0 });
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            user: updatedUser,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+export { handleSignup, handleLogin, handleDelete, handleGetUser, handleUser, handleUserChange };

@@ -12,119 +12,81 @@ const Card = ({
   itemPrice,
   itemEndDate,
   itemPhoto,
-  // itemCategory,
   sellerName,
+  itemCategory,
 }) => {
   const handleTimeUp = () => {};
 
   return (
-    <div className="lg:max-w-4xl lg:flex lg:items-center lg:max-h-96 max-w-sm sm:max-w-md p-2 gap-2 mx-auto max-lg:space-y-2">
-      {/* Card Image */}
-      <div className="lg:w-2/5 h-2/5">
-        <img
-          src={
-            itemPhoto ||
-            "https://images.nobroker.in/images/8a9f92838c14fea9018c164ceec204bc/8a9f92838c14fea9018c164ceec204bc_88172_940514_medium.jpg"
-          }
-          alt="Picture of the author"
-          className="rounded-lg w-full aspect-[3/2] object-cover object-center hover:scale-105 transition-all ease-out duration-300"
-        />
-      </div>
-      <div className="lg:w-3/5 h-3/5 lg:px-4 px-2 space-y-2 relative">
-        <div className="text-xl font-bold text-gray-900">
-          {itemName || "Card Title"}
+    <div className="max-w-md w-full mx-auto bg-[#3A2F5F] rounded-xl shadow-md overflow-hidden mb-6 hover:shadow-[#1E90FF]/50 transition-shadow duration-300">
+      <div className="md:flex flex-col">
+        <div className="w-full">
+          <img
+            className="h-48 w-full object-cover"
+            src={
+              itemPhoto ||
+              "https://images.nobroker.in/images/8a9f92838c14fea9018c164ceec204bc/8a9f92838c14fea9018c164ceec204bc_88172_940514_medium.jpg" ||
+              "/placeholder.svg"
+            }
+            alt={itemName}
+          />
         </div>
-        <span className="text-gray-600 font-normal -mt-4">
-          by{" "}
-          {item_id && item_id.length > 0 ? (
-            <Link to={`/auction/user/${item_id}`} className="text-blue-700">
-              {sellerName}
+        <div className="p-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <div className="uppercase tracking-wide text-sm text-[#1E90FF] font-semibold">{itemCategory}</div>
+              <h2 className="mt-1 text-xl font-semibold text-white">{itemName || "Card Title"}</h2>
+            </div>
+            <div className="bg-[#1E90FF]/20 text-white text-xs font-medium px-2.5 py-0.5 rounded-full">
+              ${itemPrice}
+            </div>
+          </div>
+
+          <p className="mt-2 text-[#CCCCCC] line-clamp-3">{itemDescription || "Card Description"}</p>
+
+          <div className="mt-4 text-sm text-[#CCCCCC]">
+            <span className="font-medium">Seller: </span>
+            {item_id && item_id.length > 0 ? (
+              <Link to={`/auction/user/${item_id}`} className="text-[#1E90FF] hover:text-[#FF69B4]">
+                {sellerName}
+              </Link>
+            ) : (
+              sellerName
+            )}
+          </div>
+
+          <div className="mt-2 text-sm text-[#CCCCCC]">
+            <span className="font-medium">Posted: </span>
+            {new Date(itemPostDate).toLocaleDateString()}
+          </div>
+
+          <div className="mt-2 text-sm text-[#CCCCCC]">
+            <span className="font-medium">Starts: </span>
+            {new Date(itemStartDate).toLocaleDateString()}
+          </div>
+
+          <div className="mt-2 text-sm text-[#CCCCCC]">
+            <span className="font-medium">Ends: </span>
+            {new Date(itemEndDate).toLocaleDateString()}
+          </div>
+
+          <div className="mt-2 text-sm flex items-center">
+            <span className="font-medium text-[#CCCCCC]">Time Left: </span>
+            <span className="ml-2 text-[#FF69B4]">
+              <CountdownTimer endDate={itemEndDate} onTimeUp={handleTimeUp} />
+            </span>
+          </div>
+
+          <div className="mt-6">
+            <Link to={`/auction/${auction_id}`}>
+              <button className="w-full bg-gradient-to-r from-[#1E90FF] to-[#FF69B4] hover:from-[#FF69B4] hover:to-[#1E90FF] text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:-translate-y-1">
+                View Auction
+              </button>
             </Link>
-          ) : (
-            sellerName
-          )}
-          &nbsp;on&nbsp;{itemPostDate.slice(0, 10) || "Post date"}
-        </span>
-        <div className="text-gray-600 font-normal -mt-2">
-          {itemDescription.slice(0, 196) || "Card Description"}...
-        </div>
-        <div>
-          <div className="text-gray-900 font-semibold">
-            Current Bid:{" "}
-            <span className="text-green-600">{itemPrice || "Price"}</span>
           </div>
-          <div className="text-gray-600 font-normal">
-            Started on{" "}
-            <span className="text-red-600">
-              {itemStartDate.slice(0, 10) || "End date"}
-            </span>
-          </div>
-          <div className="text-gray-600 font-normal">
-            Ends on{" "}
-            <span className="text-red-600">
-              {itemEndDate.slice(0, 10) || "End date"}
-            </span>
-          </div>
-          <div className="text-base font-normal text-red-500 flex">
-            <span className="text-gray-600 font-normal">Time Left :</span>&nbsp;
-            <CountdownTimer endDate={itemEndDate} onTimeUp={handleTimeUp} />
-          </div>
-        </div>
-        {/* Card Buttons */}
-        <div className="absolute bottom-2 right-3">
-          <Link to={`/auction/${auction_id}`}>
-            <button className="rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300 ">
-              <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-              <span className="relative">View</span>
-            </button>
-          </Link>
         </div>
       </div>
     </div>
-
-  //   <div className="flex flex-wrap justify-center border">
-  //     <div className="relative flex  flex-col my-2 bg-white shadow-sm border border-slate-200 rounded-lg w-96 border">
-  //       <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md border">
-  //         <img
-  //           src={
-  //             itemPhoto ||
-  //             "https://images.nobroker.in/images/8a9f92838c14fea9018c164ceec204bc/8a9f92838c14fea9018c164ceec204bc_88172_940514_medium.jpg"
-  //           }
-  //         />
-  //       </div>
-  //       <div className="p-4 border">
-  //         <div className="mb-4 rounded-full bg-cyan-600 py-0.5 px-2.5 border border-transparent text-xs text-white transition-all shadow-sm w-20 text-center">
-  //           POPULAR
-  //         </div>
-  //         <h6 className="mb-2 text-slate-800 text-xl font-semibold border">
-  //         {itemName || "Card Title"}
-  //         </h6>
-  //         <p className="text-slate-600 leading-normal font-light">
-  //         {itemDescription.slice(0, 196) || "Card Description"}...
-  //         </p>
-  //       </div>
-
-  //       <div className="flex items-center justify-between p-4">
-  //         <div className="flex items-center">
-  //           <img
-  //             alt="Tania Andrew"
-  //             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
-  //             className="relative inline-block h-8 w-8 rounded-full"
-  //           />
-  //           <div className="flex flex-col ml-3 text-sm">
-  //             <span className="text-slate-800 font-semibold">{item_id && item_id.length > 0 ? (
-  //         <Link to={`/auction/user/${item_id}`} className="text-blue-700">
-  //           {sellerName}
-  //         </Link>
-  //       ) : (
-  //         sellerName
-  //       )}</span>
-  //             <span className="text-slate-600">January 10, 2024</span>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  // </div>
   );
 };
 

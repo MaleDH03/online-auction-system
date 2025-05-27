@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import paintingManPortrait from "../assets/painting-man-s-portrait.jpg"
 
 const VITE_API = `${import.meta.env.VITE_API}`;
 
@@ -104,20 +105,33 @@ const CreateAuction = () => {
   const minEndDate = formData.itemStartDate || today;
 
   return (
-    <div className="min-h-[calc(100svh-9rem)] px-4 py-4">
-      <div className="mx-auto w-full max-w-[550px] bg-white">
+    <div
+      className="min-h-[calc(100svh-9rem)] px-4 py-4 bg-[#2A1B3D] bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${paintingManPortrait})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backdropFilter: 'blur(15px)',
+        WebkitBackdropFilter: 'blur(15px)',
+      }}
+      
+    >
+     <div className="absolute inset-0 bg-black opacity-70"></div>
+     
+      
+      <div className="mx-auto w-full max-w-[550px] bg-[#3A2F5F]/90 rounded-lg p-6 shadow-lg backdrop-blur-sm">
         {/* Display success or error messages */}
         {successMessage && (
-          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
+          <div className="mb-4 p-3 bg-[#1E90FF]/20 text-white rounded">
             {successMessage}
           </div>
         )}
         {errorMessage && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-[#FF69B4]/20 text-white rounded">
             {errorMessage}
           </div>
         )}
-
+  
         <form onSubmit={handleSubmit}>
           <div className="-mx-3 flex flex-wrap">
             {/* Item Name */}
@@ -125,7 +139,7 @@ const CreateAuction = () => {
               <div className="mb-5">
                 <label
                   htmlFor="itemName"
-                  className="mb-3 block text-base font-medium text-[#07074D]"
+                  className="mb-3 block text-base font-medium text-white"
                 >
                   Item Name
                 </label>
@@ -138,16 +152,16 @@ const CreateAuction = () => {
                   name="itemName"
                   id="itemName"
                   placeholder="Item Name"
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4] placeholder-gray-400"
                 />
               </div>
             </div>
             {/* Item Price */}
             <div className="w-full px-3 sm:w-1/2">
-              <div className="mb-5">   
-                <label  
+              <div className="mb-5">
+                <label
                   htmlFor="price"
-                  className="mb-3 block text-base font-medium text-[#07074D]"
+                  className="mb-3 block text-base font-medium text-white"
                 >
                   Item Starting Price
                 </label>
@@ -160,7 +174,7 @@ const CreateAuction = () => {
                   name="price"
                   id="price"
                   placeholder="Enter the starting price"
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4] placeholder-gray-400"
                 />
               </div>
             </div>
@@ -169,7 +183,7 @@ const CreateAuction = () => {
           <div className="mb-5">
             <label
               htmlFor="description"
-              className="mb-3 block text-base font-medium text-[#07074D]"
+              className="mb-3 block text-base font-medium text-white"
             >
               Item Description
             </label>
@@ -182,19 +196,19 @@ const CreateAuction = () => {
               name="description"
               id="description"
               placeholder="Enter your description here"
-              className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+              className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4] placeholder-gray-400"
             />
           </div>
           {/* Item Category */}
           <div className="mb-5">
             <label
-              className="mb-3 block text-base font-medium text-[#07074D]"
+              className="mb-3 block text-base font-medium text-white"
               htmlFor="category"
             >
               Item Category
             </label>
             <select
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4]"
               id="category"
               name="category"
               value={formData.itemCategory}
@@ -202,16 +216,38 @@ const CreateAuction = () => {
                 setFormData({ ...formData, itemCategory: e.target.value })
               }
             >
-              <option value="">Select a category</option>
-              <option value="realestate">Real Estate</option>
-              <option value="electronics">Electronic</option>
-              <option value="education">Education</option>
-              <option value="food">Food</option>
+              <option value="" className="bg-[#1E1E2F] text-white">
+                Select a category
+              </option>
+              <option value="2d" className="bg-[#1E1E2F] text-white">
+                2D Digital Art
+              </option>
+              <option value="3d" className="bg-[#1E1E2F] text-white">
+                3D Art & Modeling
+              </option>
+              <option value="Generative" className="bg-[#1E1E2F] text-white">
+                Generative & Algorithmic Art
+              </option>
+              <option value="anim" className="bg-[#1E1E2F] text-white">
+                Motion Design & Animation
+              </option>
+              <option value="IN" className="bg-[#1E1E2F] text-white">
+                Interactive & Immersive Art
+              </option>
+              <option value="photo" className="bg-[#1E1E2F] text-white">
+                Photo Manipulation & Mixed Media
+              </option>
+              <option value="nft" className="bg-[#1E1E2F] text-white">
+                NFT & Blockchain Art
+              </option>
+              <option value="glitch" className="bg-[#1E1E2F] text-white">
+                Experimental & Glitch Art
+              </option>
             </select>
           </div>
           {/* Item Image */}
           <div className="mb-5">
-            <label className="mb-3 block text-base font-medium text-[#07074D]">
+            <label className="mb-3 block text-base font-medium text-white">
               Upload item image
             </label>
             <div className="mb-5">
@@ -221,24 +257,24 @@ const CreateAuction = () => {
                 id="itemPhoto"
                 className="sr-only"
                 onChange={handleFileChange}
-                accept="image/png,image/jpeg" // Ensure PNG and JPEG
+                accept="image/png,image/jpeg"
               />
               {formData.itemPhoto && (
                 <div className="mb-4">
-                  <span className="font-medium text-[#07074D]">
+                  <span className="font-medium text-white">
                     Selected file: {formData.itemPhoto.name}
                   </span>
                 </div>
               )}
               <label
                 htmlFor="itemPhoto"
-                className="relative flex min-h-[100px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] text-center"
+                className="relative flex min-h-[100px] items-center justify-center rounded-md border border-dashed border-[#1E90FF] bg-[#1E1E2F] text-center"
               >
                 <div>
                   <span className="flex items-center space-x-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6 text-gray-600"
+                      className="w-6 h-6 text-[#1E90FF]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -248,11 +284,11 @@ const CreateAuction = () => {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                      ></path>
+                      />
                     </svg>
-                    <span className="font-medium text-gray-600">
+                    <span className="font-medium text-white">
                       Drop image to Attach, or
-                      <span className="text-blue-600 underline ml-[4px]">
+                      <span className="text-[#FF69B4] underline ml-[4px]">
                         browse
                       </span>
                     </span>
@@ -267,7 +303,7 @@ const CreateAuction = () => {
               <div className="mb-5">
                 <label
                   htmlFor="startDate"
-                  className="mb-3 block text-base font-medium text-[#07074D]"
+                  className="mb-3 block text-base font-medium text-white"
                 >
                   Starting Date
                 </label>
@@ -280,7 +316,7 @@ const CreateAuction = () => {
                   name="startDate"
                   id="startDate"
                   min={today}
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4]"
                 />
               </div>
             </div>
@@ -288,7 +324,7 @@ const CreateAuction = () => {
               <div className="mb-5">
                 <label
                   htmlFor="endDate"
-                  className="mb-3 block text-base font-medium text-[#07074D]"
+                  className="mb-3 block text-base font-medium text-white"
                 >
                   Ending Date
                 </label>
@@ -302,7 +338,7 @@ const CreateAuction = () => {
                   id="endDate"
                   disabled={!formData.itemStartDate}
                   min={minEndDate}
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                  className="w-full rounded-md border border-[#1E90FF] bg-[#1E1E2F] py-3 px-6 text-base font-medium text-white outline-none focus:border-[#FF69B4] focus:ring-2 focus:ring-[#FF69B4]"
                 />
               </div>
             </div>
@@ -310,9 +346,7 @@ const CreateAuction = () => {
           {/* Submit button */}
           <div className="flex justify-end">
             <button
-              className={`hover:shadow-form rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none ${
-                isValid ? "bg-[#6A64F1]" : "bg-gray-400 cursor-not-allowed"
-              }`}
+              className={`rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none bg-gradient-to-r from-[#1E90FF] to-[#FF69B4] hover:from-[#FF69B4] hover:to-[#1E90FF] transition-all disabled:bg-[#1E1E2F] disabled:cursor-not-allowed`}
               type="submit"
               disabled={!isValid}
             >

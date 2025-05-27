@@ -29,7 +29,8 @@ const Dashboard = () => {
     );
 
   return (
-    <div className="min-h-[calc(100svh-9rem)] px-4 py-4 w-full">
+    <div className="min-h-[calc(100svh-9rem)] px-4 py-4 w-full bg-[#1B1430] text-cyan-400">
+    
       {auctions && auctions.length > 0 ? (
         auctions.map((auction) => (
           <Card
